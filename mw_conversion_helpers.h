@@ -27,8 +27,8 @@ namespace mw{
   // -----------------------------------------
   template <typename T>
   T mw_cast(const string& s, 
-            ComponentRegistry* reg){
-            //shared_ptr<ComponentRegistry> reg){
+            ComponentRegistryPtr reg){
+    
     cerr << "converting: " << s << endl;
     
     T val; // the return val
@@ -39,8 +39,12 @@ namespace mw{
     } catch (bad_lexical_cast& e){
         // That didn't work
         // Maybe it's a variable?
-        VariablePtr var = mw_cast<VariablePtr>(s, reg);
-        val = (T)(var->getValue());
+        try{
+          VariablePtr var = mw_cast<VariablePtr>(s, reg);
+          val = (T)(var->getValue());
+        } catch(std::exception& e){
+          throw UnknownExpressionException(s);
+        }
     }
     
     return val;
@@ -52,28 +56,24 @@ namespace mw{
   // -----------------------------------------
   template <>
   string mw_cast<string>(const string& s,
-                         ComponentRegistry* reg);
-                          //shared_ptr<ComponentRegistry> reg);  
+                         ComponentRegistryPtr reg); 
   // -----------------------------------------
   // <VariablePtr>
   // Get a pointer to a variable from the component registry
   // -----------------------------------------
   template <>
   VariablePtr mw_cast<VariablePtr>(const string& s,
-                                   ComponentRegistry* reg);
-                                  //shared_ptr<ComponentRegistry> reg);                                      
+                                   ComponentRegistryPtr reg);                                      
   // -----------------------------------------
   // <StimulusPtr>
   // Get a pointer to a stimulus from the component registry
   // -----------------------------------------
   template <>
   StimulusPtr mw_cast<StimulusPtr>(const string& s,
-                                   ComponentRegistry* reg);
-                                  //shared_ptr<ComponentRegistry> reg);
+                                   ComponentRegistryPtr reg);
   template <>
   ColorTriple mw_cast<ColorTriple>(const string& s,
-                                   ComponentRegistry* reg);
-                                  //shared_ptr<ComponentRegistry> reg);
+                                   ComponentRegistryPtr reg);
 
 }
 

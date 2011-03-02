@@ -22,8 +22,7 @@ using namespace std;
 // -----------------------------------------
 template <>
 string mw_cast<string>(const string& s,
-                       ComponentRegistry* reg){
-                        //shared_ptr<ComponentRegistry> reg){
+                       ComponentRegistryPtr reg){
     string newstr(s);
     return newstr;
 }
@@ -34,10 +33,14 @@ string mw_cast<string>(const string& s,
 // -----------------------------------------
 template <>
 VariablePtr mw_cast<VariablePtr>(const string& s,
-                                 ComponentRegistry* reg){
-                                    //shared_ptr<ComponentRegistry> reg){
+                                 ComponentRegistryPtr reg){
     cerr << "converting variable: " << s << endl;
-    return reg->getVariable(s);
+    VariablePtr return_var = reg->getVariable(s);
+    if(return_var == NULL){
+      throw UnknownVariableException(s);
+    }
+    
+    return return_var;
 }
 
 // -----------------------------------------
@@ -46,8 +49,7 @@ VariablePtr mw_cast<VariablePtr>(const string& s,
 // -----------------------------------------
 template <>
 StimulusPtr mw_cast<StimulusPtr>(const string& s,
-                                 ComponentRegistry* reg){
-                                    //shared_ptr<ComponentRegistry> reg){
+                                 ComponentRegistryPtr reg){
     cerr << "converting stimulus: " << s << endl;
     return reg->getStimulus(s);
 }
@@ -55,8 +57,7 @@ StimulusPtr mw_cast<StimulusPtr>(const string& s,
 
 template <>
 ColorTriple mw_cast<ColorTriple>(const string& s,
-                                 ComponentRegistry* reg){
-                                //shared_ptr<ComponentRegistry> reg){ 
+                                 ComponentRegistryPtr reg){
     ColorTriple color;
     
     // TODO: this PCT thing is kludgey

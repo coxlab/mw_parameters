@@ -19,6 +19,7 @@ namespace mw {
 
     typedef shared_ptr<Variable>              VariablePtr;
     typedef shared_ptr<StimulusNode>          StimulusPtr;
+    typedef ComponentRegistry*                ComponentRegistryPtr;
     
     typedef struct  ColorTriple_t{
         double r;
